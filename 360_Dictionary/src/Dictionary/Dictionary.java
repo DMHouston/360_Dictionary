@@ -18,8 +18,11 @@ public class Dictionary {
 	
 	//Appends the specified element to the end of this list.
 	public void addWord(ArrayList<String> thisArrayList, String word) {
-		thisArrayList.ensureCapacity(thisArrayList.size() +1);	//ensures the capacity is enough to add the next word
-		thisArrayList.add(word);
+		if(!(searchWord(thisArrayList, word)))						//If this word is not found
+		{
+			thisArrayList.ensureCapacity(thisArrayList.size() +1);	//ensures the capacity is enough to add the next word
+			thisArrayList.add(word);
+		}
 	}
 	
 	//Outputs the file to standard out, may need to be changed for GUI

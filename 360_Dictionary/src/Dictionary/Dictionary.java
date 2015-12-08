@@ -10,31 +10,38 @@ public class Dictionary {
 	public Dictionary(ArrayList<String> wordList) {
 	}
 	
-	//Returns true if this list contains the specified element.
-	public boolean searchWord(ArrayList<String> thisArrayList, String word) {
-		boolean elementFound = thisArrayList.contains(word);
-		return elementFound;
+	//Returns true if the word is found in dictionary or ignoredWords.
+	public boolean searchWord(String word) {
+		boolean foundInEither = (dictionary.contains(word) || ignoredWords.contains(word));
+		return foundInEither;
 	}
 	
-	//Appends the specified element to the end of this list.
-	public void addWord(ArrayList<String> thisArrayList, String word) {
-		if(!(searchWord(thisArrayList, word)))						//If this word is not found
+	//Appends the specified element to the end of the dictionary list, adding to either ignored or added words respectively
+	public void addWord(String word) {
+		if(!(searchWord(word)))							//If this word is not found
 		{
-			thisArrayList.ensureCapacity(thisArrayList.size() +1);	//ensures the capacity is enough to add the next word
-			thisArrayList.add(word);
+			dictionary.ensureCapacity(dictionary.size() + 1);	//ensures the capacity is enough to add the next word
+			dictionary.add(word);
+			wordsAdded.ensureCapacity(wordsAdded.size() + 1);
+			wordsAdded.add(word);
+		}
+		else
+		{
+			ignoredWords.ensureCapacity(ignoredWords.size() + 1);
+			ignoredWords.add(word);
 		}
 	}
 	
 	//Outputs the file to standard out, may need to be changed for GUI
-	public void displayOutput(ArrayList<String> Dictionary, ArrayList<String> wordsAdded, ArrayList<String> ignoredWords) {
+	public void displayOutput() {
         System.out.println("Words in Dictionary: ");
-        System.out.println(dictToString(Dictionary));
+        System.out.println(dictToString(dictionary));
         
         System.out.println("Words added: ");
         System.out.println(dictToString(wordsAdded));
 
         System.out.println("Ignored Words: ");
-        System.out.println(dictToString(Dictionary));
+        System.out.println(dictToString(ignoredWords));
 	}
 
 	//Iterates through an ArrayList returning a String with each word seperated by a new line.

@@ -3,26 +3,41 @@ package Dictionary;
 import java.io.*;
 import java.util.ArrayList;
 
-public class TextFile {
+public class TextFile
+{
 	
 	private ArrayList<String> documentToCheck;
 	private BufferedReader file;
 	
-	public TextFile(String fileName) throws IOException {
-		try	{
+	public TextFile(String fileName) throws IOException
+	{
+		try
+		{
 			documentToCheck = new ArrayList<String>();
 			
 			//Create the buffer and file reader to take in input
-			file = new BufferedReader(new FileReader("Dictionary.txt"));
+			file = new BufferedReader(new FileReader(fileName));
 			String line = file.readLine();
 			
-			//Convert the line into an ArrayList
-			String [] split = line.split("\\s*,\\s*");
-			for (int index = 0; index < split.length; index++)
+			//Split the words from each line into an ArrayList
+			while (line != null)
 			{
-				//Double check to make sure the word has a value
-				if (split[index] != null && split[index].length() != 0)
-					documentToCheck.add(split[index]);
+				String [] split = line.split("\\s+");
+				for (int index = 0; index < split.length; index++)
+				{
+					//Remove punctuation and whitespace
+					split[index] = split[index].replaceAll("[^\\w]", "");
+					//Remove numbers
+					split[index] = split[index].replaceAll("\\d+", "");
+					//Make sure the word has a value
+					if (split[index] != null && split[index].length() != 0)
+						//Ensure there are no duplicates
+						if (!documentToCheck.contains(split[index]))
+							documentToCheck.add(split[index]);
+				}
+				
+				//Load the next line
+				line = file.readLine();
 			}
 			
 			//TEST REMOVE LATER: Outputs the elements in the ArrayList to check it works properly
@@ -30,14 +45,16 @@ public class TextFile {
 				System.out.println(documentToCheck.get(i));
 			
 		}
-		finally {
+		finally
+		{
 			//Must close the file
 			if (file != null)
 				file.close();
 		}
 	}
 	
-	public ArrayList<String> getDocument() {
+	public ArrayList<String> getDocument()
+	{
 		return documentToCheck;
 	}
 }

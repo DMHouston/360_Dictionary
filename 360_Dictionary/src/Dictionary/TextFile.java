@@ -29,6 +29,8 @@ public class TextFile
 					split[index] = split[index].replaceAll("[^\\w]", "");
 					//Remove numbers
 					split[index] = split[index].replaceAll("\\d+", "");
+					//Change to lower case
+					split[index] = split[index].toLowerCase();
 					//Make sure the word has a value
 					if (split[index] != null && split[index].length() != 0)
 						//Ensure there are no duplicates
@@ -41,8 +43,8 @@ public class TextFile
 			}
 			
 			//TEST REMOVE LATER: Outputs the elements in the ArrayList to check it works properly
-			for (int i = 0; i < documentToCheck.size(); i++)
-				System.out.println(documentToCheck.get(i));
+			//for (int i = 0; i < documentToCheck.size(); i++)
+				//System.out.println(documentToCheck.get(i));
 			
 		}
 		finally

@@ -1,0 +1,5 @@
+The quick brown fox jumps over the lazy dog.
+"What?" she asked? 'I can't believe it!'
+ABC@gmail.com & $30.42
+(2a * 36b) + x - 7 >= 5q
+#java

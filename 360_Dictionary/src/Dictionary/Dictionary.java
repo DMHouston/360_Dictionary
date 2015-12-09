@@ -17,7 +17,7 @@ public class Dictionary
 	//Returns true if the word is found in dictionary or ignoredWords.
 	public boolean searchWord(String word)
 	{
-		boolean foundInEither = (dictionary.contains(word) || ignoredWords.contains(word));
+		boolean foundInEither = dictionary.contains(word);
 		return foundInEither;
 	}
 	
@@ -33,12 +33,14 @@ public class Dictionary
 			wordsAdded.ensureCapacity(wordsAdded.size() + 1);
 			wordsAdded.add(word);
 		}
-		else
+	}
+	
+	//Appends the specified element to the end of the ignored word
+	public void ignoreWord(String word)
 		{
 			ignoredWords.ensureCapacity(ignoredWords.size() + 1);
 			ignoredWords.add(word);
 		}
-	}
 	
 	//Outputs the file to standard out, may need to be changed for GUI
 	public void displayOutput()

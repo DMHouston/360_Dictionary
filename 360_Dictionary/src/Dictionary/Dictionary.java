@@ -17,8 +17,7 @@ public class Dictionary
 	//Returns true if the word is found in dictionary or ignoredWords.
 	public boolean searchWord(String word)
 	{
-		boolean foundInEither = dictionary.contains(word);
-		return foundInEither;
+		return dictionary.contains(word);
 	}
 	
 	//Appends the specified element to the end of the dictionary list, adding to either ignored or added words respectively

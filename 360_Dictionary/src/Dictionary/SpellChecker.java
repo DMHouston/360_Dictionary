@@ -32,6 +32,9 @@ public class SpellChecker
 				line = input.next();
 			}
 			
+			//Must add the last line
+			dictionaryArray.add(line);
+			
 			input.close();
 		}
 		catch (Exception e)
@@ -51,12 +54,13 @@ public class SpellChecker
 		dictionary = new Dictionary(dictionaryArray);
 		
 		//Prompt user for the file to input
+		input = new Scanner(System.in);
+		
 		try
 		{	
 			//Keep taking input until a proper file is found
 			while(!fileExists)
 			{
-				input = new Scanner(System.in);
 				System.out.print("Enter file name with extension(.txt): ");
 				file = new TextFile(input.nextLine());
 				
@@ -65,15 +69,51 @@ public class SpellChecker
 		}	
 		catch (Exception e)
 		{
-			System.out.println("Could not find file. Please make sure the file is in the directory and try again.");
+			System.out.println("Could not find file.Please make sure the file is in the directory and try again.");
 		}
 		
+		runSpellcheck(input, file, dictionary);
 		
-		runSpellcheck(file, dictionary);
+		dictionary.saveOutput();
+		
+		input.close();
 	}
 		
-	private static void runSpellcheck(TextFile file, Dictionary dictionary)
+	private static void runSpellcheck(Scanner input, TextFile file, Dictionary dictionary)
 	{
+		//Replace input with GUI interaction
+		//Scanner input = new Scanner(System.in);
 		
+		ArrayList<String> wordList = file.getDocument();
+		
+		//Ask the user for each word not found
+		for (int wordNum = 0; wordNum < wordList.size(); wordNum ++)
+		{
+			if (!dictionary.searchWord(wordList.get(wordNum)))
+			{
+				//Replace with GUI interaction
+				System.out.println("'" + wordList.get(wordNum) + "' is not in the dictionary."
+						+ "\nWould you like to add it? Please enter yes or no.");
+				
+				String answer = null;
+				//Continue prompting for input until "yes" or "no" is received
+				while (answer == null)
+				{
+					answer = input.nextLine();
+					//Add word
+					if (answer.toLowerCase().equals("yes"))
+						dictionary.addWord(wordList.get(wordNum));
+					//Ignore word
+					else if (answer.toLowerCase().equals("no"))
+						dictionary.ignoreWord(wordList.get(wordNum));
+					//Continue prompting input for yes or no
+					else
+					{
+						System.out.println("Please enter yes or no.");
+						answer = null;
+					}
+				}
+			}
+		}
 	}
 }

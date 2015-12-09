@@ -1,5 +1,9 @@
 package Dictionary;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
 
 //Dictionary class handles creating the ArrayLists, searching for a word(boolean), adding a word(void), displaying output(void), toSting(String)
 public class Dictionary
@@ -17,16 +21,17 @@ public class Dictionary
 	//Returns true if the word is found in dictionary or ignoredWords.
 	public boolean searchWord(String word)
 	{
-		return dictionary.contains(word);
+		boolean foundInEither = dictionary.contains(word);
+		return foundInEither;
 	}
 	
-	//Appends the specified element to the end of the dictionary list, adding to either ignored or added words respectively
+	//Appends the specified element to the end of the wordsAdded and dictionary ArrayLists
 	public void addWord(String word)
 	{
 		//If this word is not found
 		if(!(searchWord(word)))					
 		{
-			//ensures the capacity is enough to add the next word
+			//Ensures the capacity is enough to add the next word
 			dictionary.ensureCapacity(dictionary.size() + 1);
 			dictionary.add(word);
 			wordsAdded.ensureCapacity(wordsAdded.size() + 1);
@@ -42,28 +47,87 @@ public class Dictionary
 		}
 	
 	//Outputs the file to standard out, may need to be changed for GUI
-	public void displayOutput()
+	public void saveOutput()
 	{
-        System.out.println("Words in Dictionary: ");
-        System.out.println(dictToString(dictionary));
-        
-        System.out.println("Words added: ");
-        System.out.println(dictToString(wordsAdded));
+		//Sort all of the ArrayLists first
+		Collections.sort(dictionary);
+		Collections.sort(wordsAdded);
+		Collections.sort(ignoredWords);
+		
+		PrintWriter programDictionaryFile = null;
+		PrintWriter userDictionaryFile = null;
+		PrintWriter ignoredFile = null;
+		PrintWriter addedFile = null;
+		
+		Scanner input = null;
+		
+		//Try saving all the output files
+        try
+        {
+        	input = new Scanner(System.in);
+        	
+        	//Get the filename of the new dictionary
+        	System.out.println("Please enter a name for the new dictionary");
+            String fileName = input.nextLine();
+        	userDictionaryFile = new PrintWriter(fileName);
+        	
+        	//Print each word on a different line
+        	printArrayList(dictionary, userDictionaryFile);
+        	
+        	userDictionaryFile.close();
+        	
+        	//Get the filename of the added words file
+        	System.out.println("Please enter a name for the added words file");
+            fileName = input.nextLine();
+            addedFile = new PrintWriter(fileName);
+            
+            //Print each word on a different line
+            printArrayList(wordsAdded, addedFile);
+            
+            addedFile.close();
 
-        System.out.println("Ignored Words: ");
-        System.out.println(dictToString(ignoredWords));
+            //Get the filename of the ignored words file
+            System.out.println("Please enter a name for the ignored words file");
+            fileName = input.nextLine();
+            ignoredFile = new PrintWriter(fileName);
+            
+            //Print each word on a different line
+            printArrayList(ignoredWords, ignoredFile);
+            
+            ignoredFile.close();
+            
+          //Get the filename of the new dictionary
+        	programDictionaryFile = new PrintWriter("Dictionary.txt");
+        	
+        	//Print each word on a different line
+        	printArrayList(dictionary, programDictionaryFile);
+        	
+        	programDictionaryFile.close();
+        }
+        catch (IOException e)
+        {
+        	System.out.println("Output error");
+        }
+        finally
+        {
+        	//Close all files in case of exceptions
+	        if (programDictionaryFile != null)
+	        	programDictionaryFile.close();
+	        if (userDictionaryFile != null)
+	        	userDictionaryFile.close();
+	        if (ignoredFile != null)
+	        	ignoredFile.close();
+	        if (addedFile != null)
+	        	addedFile.close();
+        }
+        
+        input.close();
 	}
 
 	//Iterates through an ArrayList returning a String with each word separated by a new line.
-	private String dictToString(ArrayList<String> thisArrayList)
+	private void printArrayList(ArrayList<String> list, PrintWriter file)
 	{
-		String returnString = "";
-		
-        for (int index = 0; index < thisArrayList.size(); index ++)
-        {
-            returnString += thisArrayList.get(index);
-            returnString += "\r\n";			//Using "/n" does not work on every platform
-        }
-        return returnString;
+        for (int index = 0; index < list.size(); index ++)
+            file.println(list.get(index));
 	}
 }

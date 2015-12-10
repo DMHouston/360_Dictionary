@@ -47,7 +47,7 @@ public class Dictionary
 		}
 	
 	//Outputs the file to standard out, may need to be changed for GUI
-	public void saveOutput()
+	public void saveOutput(Scanner input)
 	{
 		//Sort all of the ArrayLists first
 		Collections.sort(dictionary);
@@ -58,8 +58,6 @@ public class Dictionary
 		PrintWriter userDictionaryFile = null;
 		PrintWriter ignoredFile = null;
 		PrintWriter addedFile = null;
-		
-		Scanner input = null;
 		
 		//Try saving all the output files
         try
@@ -120,8 +118,6 @@ public class Dictionary
 	        if (addedFile != null)
 	        	addedFile.close();
         }
-        
-        input.close();
 	}
 
 	//Iterates through an ArrayList returning a String with each word separated by a new line.

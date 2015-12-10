@@ -42,10 +42,6 @@ public class TextFile
 				line = file.readLine();
 			}
 			
-			//TEST REMOVE LATER: Outputs the elements in the ArrayList to check it works properly
-			//for (int i = 0; i < documentToCheck.size(); i++)
-				//System.out.println(documentToCheck.get(i));
-			
 		}
 		finally
 		{

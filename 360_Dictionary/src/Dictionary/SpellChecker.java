@@ -9,73 +9,95 @@ public class SpellChecker
 	
 	public static void main(String[] args)
 	{
+		Scanner input = new Scanner(System.in);
+		boolean continueLoadingFiles = false;
 		
-		Dictionary dictionary =  null;
-		TextFile file = null;
-	
-		boolean fileExists = false;
-		
-		//Attempt to load the dictionary
-		Scanner input = null;
-		ArrayList<String> dictionaryArray = new ArrayList<String>();
-		
-		try
+		do
 		{
-			//Create the scanner to take in input
-			input = new Scanner(new File("Dictionary.txt"));
-			String line = input.next();
+			Dictionary dictionary =  null;
+			TextFile file = null;
+		
+			boolean fileExists = false;
 			
-			//Add one line at a time to the dictionary array
-			while (input.hasNext())
+			//Attempt to load the dictionary
+			ArrayList<String> dictionaryArray = new ArrayList<String>();
+			
+			Scanner fileScanner = null;
+			
+			try
 			{
-				dictionaryArray.add(line);
-				line = input.next();
-			}
-			
-			//Must add the last line
-			dictionaryArray.add(line);
-			
-			input.close();
-		}
-		catch (Exception e)
-		{
-			System.out.println("The dictionary.txt file cannot be found."
-					+ "\nNo words will be found correct."
-					+ "\nA new dictionary.txt file will be output after "
-					+ "a file is finished being processed.");
-			
-			//Close the file in case of an exception
-			if (input != null)
-				input.close();
-			
-			dictionaryArray = new ArrayList<String>();
-		}
-		
-		dictionary = new Dictionary(dictionaryArray);
-		
-		//Prompt user for the file to input
-		input = new Scanner(System.in);
-		
-		try
-		{	
-			//Keep taking input until a proper file is found
-			while(!fileExists)
-			{
-				System.out.print("Enter file name with extension(.txt): ");
-				file = new TextFile(input.nextLine());
+				//Create the scanner to take in input
+				fileScanner = new Scanner(new File("Dictionary.txt"));
+				String line = fileScanner.next();
 				
-				fileExists = true;
+				//Add one line at a time to the dictionary array
+				while (fileScanner.hasNext())
+				{
+					dictionaryArray.add(line);
+					line = fileScanner.next();
+				}
+				
+				//Must add the last line
+				dictionaryArray.add(line);
+				
+				fileScanner.close();
 			}
-		}	
-		catch (Exception e)
-		{
-			System.out.println("Could not find file.Please make sure the file is in the directory and try again.");
+			catch (Exception e)
+			{
+				System.out.println("The dictionary.txt file cannot be found."
+						+ "\nNo words will be found correct."
+						+ "\nA new dictionary.txt file will be output after "
+						+ "a file is finished being processed.");
+				
+				//Close the file in case of an exception
+				if (fileScanner != null)
+					fileScanner.close();
+				
+				dictionaryArray = new ArrayList<String>();
+			}
+			
+			dictionary = new Dictionary(dictionaryArray);
+			
+			
+			try
+			{	
+				//Keep taking input until a proper file is found
+				while(!fileExists)
+				{
+					System.out.print("Enter file name with extension(.txt): ");
+					file = new TextFile(input.nextLine());
+					
+					fileExists = true;
+					
+					runSpellcheck(input, file, dictionary);
+					
+					dictionary.saveOutput(input);
+				}
+			}	
+			catch (Exception e)
+			{
+				System.out.println("Could not find file."
+						+ "\nPlease make sure the file is in the directory and try again.");
+			}
+			
+			
+			System.out.println("Continue loading files? Enter yes or no.");
+			String line = null;
+			while (line == null)
+			{
+				line = input.nextLine();
+				if (line.toLowerCase().equals("yes"))
+					continueLoadingFiles = true;
+				else if (line.toLowerCase().equals("no"))
+					continueLoadingFiles = false;
+				else
+				{
+					line = null;
+					System.out.println("Please enter yes or no.");
+				}
+			}
 		}
-		
-		runSpellcheck(input, file, dictionary);
-		
-		dictionary.saveOutput();
-		
+		while (continueLoadingFiles);
 		input.close();
 	}
 		
